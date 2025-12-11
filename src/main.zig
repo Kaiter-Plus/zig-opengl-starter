@@ -23,10 +23,8 @@ pub fn main() !void {
     // 初始化 GLFW 库
     // 注意: _ = 用于忽略返回值，因为我们通过后续检查窗口创建来验证初始化
     _ = c.glfwInit();
-
     // 确保程序退出前终止 GLFW - 使用 defer 保证资源安全清理
     defer c.glfwTerminate();
-
     // 配置 GLFW 使用的 OpenGL 版本(这里使用 OpenGL 3.3 版本)和配置文件(这里使用 Core-Profile)
     c.glfwWindowHint(c.GLFW_CONTEXT_VERSION_MAJOR, 3); // 主版本 3
     c.glfwWindowHint(c.GLFW_CONTEXT_VERSION_MINOR, 3); // 次版本 3
@@ -38,7 +36,6 @@ pub fn main() !void {
         c.glfwTerminate(); // 清理 GLFW 资源
         return error.FailedToCreateWindow; // 返回自定义错误
     };
-
     // 设置当前线程的 OpenGL 上下文为新创建的窗口
     c.glfwMakeContextCurrent(window);
 
@@ -68,7 +65,7 @@ fn processInput(window: *c.GLFWwindow) void {
     if (c.glfwGetKey(window, c.GLFW_KEY_ESCAPE) == c.GLFW_PRESS) {
         // 设置窗口应关闭标志
         // 注意: 使用 1 (GLFW_TRUE) 而不是 true，因为这是 C API
-        c.glfwSetWindowShouldClose(window, 1);
+        c.glfwSetWindowShouldClose(window, c.GLFW_TRUE);
     }
 }
 
