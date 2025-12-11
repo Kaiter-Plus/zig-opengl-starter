@@ -43,8 +43,8 @@ pub fn main() !void {
     // 注意: 回调函数必须使用 callconv(.c) 以匹配 C 调用约定
     _ = c.glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    // 初始化 GLAD - 使用自定义加载器函数适配 GLFW 的函数指针获取
-    if (c.gladLoadGLLoader(gladLoaderProc) == 0) {
+    // 初始化 GLAD
+    if (c.gladLoadGLLoader(@ptrCast(&c.glfwGetProcAddress)) == 0) {
         std.debug.print("错误: 无法初始化 GLAD\n", .{});
         return error.FailedToInitializeGLAD;
     }
@@ -82,24 +82,4 @@ fn processInput(window: *c.GLFWwindow) void {
 fn framebuffer_size_callback(_: ?*c.GLFWwindow, width: c_int, height: c_int) callconv(.c) void {
     // 更新 OpenGL 视口以匹配新窗口大小
     c.glViewport(0, 0, width, height);
-}
-
-/// GLAD 函数加载器适配器
-/// 此函数桥接 GLFW 的函数加载机制和 GLAD 的期望接口
-/// @param name 要加载的 OpenGL 函数名称
-/// @return 函数指针作为不透明指针，或 null (如果找不到函数)
-fn gladLoaderProc(name: [*c]const u8) callconv(.c) ?*anyopaque {
-    // 从 GLFW 获取函数地址
-    const proc = c.glfwGetProcAddress(name);
-    if (proc == null) return null;
-
-    // 指针转换链 (Zig 0.15.2 语法):
-    // 1. proc.? - 解包可选指针
-    // 2. @constCast - 移除 const 限定符 (C 函数指针常带 const)
-    // 3. @ptrCast - 重新解释指针位模式
-    // 4. @as(*anyopaque, ...) - 显式类型转换
-    //
-    // 注意: 此转换在 x86_64/ARM64 桌面平台上安全，因为
-    // 函数指针和数据指针具有相同的大小和表示
-    return @as(*anyopaque, @ptrCast(@constCast(proc.?)));
 }
