@@ -51,9 +51,14 @@ pub fn main() !void {
 
     // 主渲染循环
     while (c.glfwWindowShouldClose(window) == 0) {
+        // 输入(Input)
         processInput(window); // 处理用户输入
+        // 渲染(Render)
+        c.glClearColor(0.2, 0.3, 0.3, 1.0); // glClearColor 为 状态设置函数，这里设置了清屏颜色
+        c.glClear(c.GL_COLOR_BUFFER_BIT); // glClear 为 状态使用函数，调用清除颜色缓冲之后，整个颜色缓冲都会被填充为 glClearColor 里所设置的颜色
+        // glfw
         c.glfwSwapBuffers(window); // 交换前后缓冲区 (双缓冲)
-        c.glfwPollEvents(); // 处理事件队列
+        c.glfwPollEvents(); // 处理IO事件队列。按键按下或者释放，鼠标移动等事件的处理
     }
 }
 
