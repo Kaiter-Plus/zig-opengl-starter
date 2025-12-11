@@ -1,0 +1,11 @@
+.{
+    .name = .zig_opengl_starter,
+    .version = "0.0.0",
+    .fingerprint = 0xbaa68e5f0d023aef,
+    .minimum_zig_version = "0.15.2",
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}
