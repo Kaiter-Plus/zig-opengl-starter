@@ -21,8 +21,8 @@ pub fn build(b: *std.Build) void {
     exe.linkSystemLibrary("winmm"); // 多媒体
     exe.linkSystemLibrary("opengl32"); // OpenGL
     b.installArtifact(exe);
-    const run_step = b.step("run", "Run the app");
     const run_cmd = b.addRunArtifact(exe);
-    run_step.dependOn(&run_cmd.step);
     run_cmd.step.dependOn(b.getInstallStep());
+    const run_step = b.step("run", "Run the app");
+    run_step.dependOn(&run_cmd.step);
 }
